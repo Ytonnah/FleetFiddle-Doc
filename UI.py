@@ -1,12 +1,10 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter.ttk import *
 import keyboard as k
 from tkinter import Text,Canvas
 
 
 #import random
-
-
 root = Tk()
 width,height = root.winfo_screenwidth(),root.winfo_screenheight()
 canvasSize = root.geometry('%dx%d+0+0'%(width,height))
@@ -14,7 +12,7 @@ root.title('WDocProj')
 root.config(background="#E4DCCF")#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
-frm = ttk.Frame(root,padding=10)
+frm = Frame(root,padding=10)
 frm.config()
 frm.place()
 
@@ -31,10 +29,19 @@ paperplace.place(x=250,y=50)
 
 
 #widgets goes here
-navFile1 = ttk.Button(text="File",)
+style1 = Style()
+style1.configure('Custom.TButton',font=("calibri",11),background="#7D9D9C")
+
+#very top nav bar goes here
+navFile1 = Button(text="File",style='Custom.TButton')
 navFile1.config()
 navFile1.place(width=85,height=23,x=10,y=10,bordermode="inside")
 
+#word editing utilities goes here.
+
+
+
+#text field goes here
 textpad = Text()
 textpad.place(x=300,y=100,width=800,height=1500)
 
