@@ -6,3 +6,17 @@ Features to be added:
 3.image and graphics formatting
 4.layout management
 5.Toolkits and other features
+
+Modules to be added:
+time module for time tracking,traceback, and rollback features
+os module for system related microtasks
+tkinter for the base UI design,layout and content creations
+
+Custom utility tools:
+auto correction
+font adjustment 
+format adjustment
+image placement and snapping
+image and graphical object design tools
+print feature
+file type creations
