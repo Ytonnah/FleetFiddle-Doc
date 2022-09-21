@@ -49,7 +49,7 @@ class TopWidgets:
             edit.place_forget()
             navFile2.configure(command=TopWidgets.show)
             TopWidgets.hidden = True#its closing and re placing now. all I need is to make it appear everytime it is clicked
-        else:
+        elif TopWidgets.hidden == True:
             TopWidgets.show()
             navFile2.configure(command=edit.place_forget)
             TopWidgets.hidden = False
@@ -79,12 +79,36 @@ navFile1 = Button(text="File",style='Custom.TButton')
 navFile1.config()
 navFile1.place(width=75,height=23,x=10,y=6)
 
-navFile2 = Button(text="Edit",style='Custom.TButton',command=TopWidgets.hide)
+navFile2 = Button(text="Edit",style='Custom.TButton')
+navFile2.config (command=TopWidgets.hide)
 navFile2.place(width=75,height=23,x=100,y=6)
 #navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
 #word editing utilities goes here.
 
 edit.place(x= 10,y=20,width=50,height=100)
+
+#Add the content tools bar(below the nav bars)
+
+#1. the font alignment buttons (left,centered, right)
+L_allignment = Button(text='Left') #maybe replace it with icons later on
+L_allignment.place(x=800,y=50,width=50,height=20)
+
+C_allignment = Button(text='Cntr') #maybe replace it with icons later on
+C_allignment.place(x=850,y=50,width=50,height=20)
+
+R_allignment = Button(text='Rght') #maybe replace it with icons later on
+R_allignment.place(x=900,y=50,width=50,height=20)
+
+
+#2. the font Size field and fixed size buttons
+Label2 = Label(text="Font Size:").place(x=445,y=55,width=55,height=20)
+
+Fz_Field = Entry()
+Fz_Field.insert(0,"fsz: ")
+Fz_Field.place(x=500,y=55,width=50,height=20)
+
+Fz_FixedSize = Button(text="v")
+Fz_FixedSize.place(x=550,y=55,width=20,height=20)
 
 
 #text field goes here
