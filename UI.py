@@ -20,10 +20,6 @@ frm.place()
 s = Style()
 s.configure("My.TFrame",background="red")
 
-edit = Frame(root,padding=10,style="My.TFrame")
-edit.config()#make it so the the widget frame display is hidden
-#edit.place(x= 10,y=20,width=50,height=100)
-
 
 '''
 test out core features. then move it on a separate library later
@@ -42,17 +38,13 @@ class liner:
         #time.sleep(5)
 
 class TopWidgets:
-    def show():edit.place(x= 10,y=20,width=50,height=100)#reseting the plcement
-    hidden = False
+    def show():
+        edit.place(x= 100,y=26,width=50,height=100)#reseting the plcement
+        hidden = False
+        navFile2.config(command=TopWidgets.hide)
     def hide():
-        if TopWidgets.hidden == False: #I need to think of a better popup mechanics
-            edit.place_forget()
-            navFile2.configure(command=TopWidgets.show)
-            TopWidgets.hidden = True#its closing and re placing now. all I need is to make it appear everytime it is clicked
-        elif TopWidgets.hidden == True:
-            TopWidgets.show()
-            navFile2.configure(command=edit.place_forget)
-            TopWidgets.hidden = False
+        edit.place_forget()
+        navFile2.config(command=TopWidgets.show)
 
         
 
@@ -80,12 +72,17 @@ navFile1.config()
 navFile1.place(width=75,height=23,x=10,y=6)
 
 navFile2 = Button(text="Edit",style='Custom.TButton')
-navFile2.config (command=TopWidgets.hide)
+navFile2.config (command=TopWidgets.show)
 navFile2.place(width=75,height=23,x=100,y=6)
 #navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
 #word editing utilities goes here.
 
-edit.place(x= 10,y=20,width=50,height=100)
+
+#pop widgets goes here 
+edit = Frame(root,padding=10,style="My.TFrame")
+edit.config()#make it so the the widget frame display is hidden
+#edit.place(x= 10,y=20,width=50,height=100)
+edit.place_forget()
 
 #Add the content tools bar(below the nav bars)
 
@@ -110,12 +107,17 @@ Fz_Field.place(x=500,y=55,width=50,height=20)
 Fz_FixedSize = Button(text="v")
 Fz_FixedSize.place(x=550,y=55,width=20,height=20)
 
+def deletePlaceholderText(event):#functions that deletes the placeholder text
+    if event:
+        textpad.delete("0.1",END)#make it so that it just delete the placeholder text and when not re focusing on the widget
 
 #text field goes here
 textpad = Text(bd=0)
 #textpad.insert(END,"0\t")
 textpad.config(font=("calibri",12))
 textpad.place(x=350,y=200,width=800,height=1500)
+textpad.insert(END,"/Type something here/")
+textpad.bind('<FocusIn>',deletePlaceholderText)
 #textpad.bind('<Return>',maincommand)
 
 root.mainloop()
