@@ -107,16 +107,29 @@ Fz_Field.place(x=500,y=55,width=50,height=20)
 Fz_FixedSize = Button(text="v")
 Fz_FixedSize.place(x=550,y=55,width=20,height=20)
 
-def deletePlaceholderText(event):#functions that deletes the placeholder text
-    if event:
-        textpad.delete("0.1",END)#make it so that it just delete the placeholder text and when not re focusing on the widget
+def deletePlaceholderText(event):#functions that deletes the placeholder text(WORKS NOW)
+    a = textpad.get("1.0","1.21")
+    if event and a == placeholderText1:
+        textpad.delete("1.0","1.21")
+        print("pingpong")
+        '''
+        Tkinter text indexing guide:
+        text widget has index pointer system.
+        "1.0" means line 1 and the 0 index character or first character
+        "1.21" means line 1 character 21
+        '''
+        
+        
 
 #text field goes here
+placeholderText1 = "/Type something here/"
 textpad = Text(bd=0)
 #textpad.insert(END,"0\t")
 textpad.config(font=("calibri",12))
 textpad.place(x=350,y=200,width=800,height=1500)
-textpad.insert(END,"/Type something here/")
+textpad.insert(END,placeholderText1)
+textpad.tag_add("plc","1.0","1.10") #marker
+
 textpad.bind('<FocusIn>',deletePlaceholderText)
 #textpad.bind('<Return>',maincommand)
 
