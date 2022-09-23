@@ -1,4 +1,4 @@
-# Word-document-plus
+# FF Document
 Word Document with ease of access and light tools and real-time collaboration of making word documents
 
 Features needed to be added so far:
