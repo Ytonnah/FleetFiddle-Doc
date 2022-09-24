@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
 from tkinter import Text,Canvas
+from PIL import Image, ImageTk
 #import time
 #import keyboard
 #import os
@@ -13,10 +14,11 @@ root.title('WDocProj')
 root.config(background="#E4DCCF")#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
+#MAIN FRAME
 frm = Frame(root,padding=10)
 frm.place()
 
-#initializing frames for each button trigger signals
+#WIDGET STYLE SETUP GOES HERE
 s = Style()
 s.configure("My.TFrame",background="red")
 
@@ -75,14 +77,17 @@ edit.place_forget()
 alignment_y = 66 #base y alignment
 alignment_label = Label(text="Alignment:").place(x=845,y=(alignment_y - 20))
 
-L_allignment = Button(text='Left') #maybe replace it with icons later on
-L_allignment.place(x=800,y=alignment_y,width=50,height=20)
+L_Img = PhotoImage(file="Icons\Left_icon.png")
+L_Img.zoom(50,20)#need to Fix image button in order to display properly
+
+L_allignment = Button(text='Left',image=L_Img) #maybe replace it with icons later on
+L_allignment.place(x=800,y=alignment_y,width=50,height=50)
 
 C_allignment = Button(text='Cntr') #maybe replace it with icons later on
-C_allignment.place(x=850,y=alignment_y,width=50,height=20)
+C_allignment.place(x=850,y=alignment_y,width=50,height=50)
 
 R_allignment = Button(text='Rght') #maybe replace it with icons later on
-R_allignment.place(x=900,y=alignment_y,width=50,height=20)
+R_allignment.place(x=900,y=alignment_y,width=50,height=50)
 
 
 #2. the font Size field and fixed size buttons
@@ -101,7 +106,7 @@ def deletePlaceholderText(event):#functions that deletes the placeholder text(WO
     plcd = placeholderText1 in a
     if event and plcd:
         textpad.delete("1.0","1.21")
-        textpad.config(fg="black")
+        textpad.config(fg="black",font="italic")
         print("pingpong")
         '''
         Tkinter text indexing guide:
@@ -114,17 +119,17 @@ def insertPlaceholderTExt(event):
     plcd = placeholderText1 in a
     if event and plcd==False and len(a) == 0:
         textpad.insert(END,placeholderText1)
-        textpad.config(font=("calibri",12),fg="#808080")
+        textpad.config(font=("calibri",12,"italic"),fg="#808080")
         print("bong!")
     elif event and plcd==False and len != 0:
         print("boop")#there, fixed somehow
-        
+        #make sure it also detect spaces
 
 #text field goes here
-placeholderText1 = "$/Type something here"
+placeholderText1 = "Type something here"
 textpad = Text(bd=0)
 #textpad.insert(END,"0\t")
-textpad.config(font=("calibri",12),fg="#808080")
+textpad.config(font=("calibri",12,"italic"),fg="#808080")
 textpad.place(x=350,y=300,width=800,height=1500)
 textpad.insert(END,placeholderText1)
 textpad.tag_add("plc","1.0","1.10") #marker
