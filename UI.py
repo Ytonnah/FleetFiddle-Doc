@@ -24,15 +24,6 @@ s.configure("My.TFrame",background="red")
 '''
 test out core features. then move it on a separate library later
 '''
-#functionalities
-class liner:
-    linecounter = 0#linecounted should be part of the method
-    def addCodeLine(event):
-        linecounter+=1
-        a = "something \n"
-        textpad.insert(END,a)
-        
-        #time.sleep(5)
 
 class TopWidgets:
     def show():
@@ -43,10 +34,6 @@ class TopWidgets:
         edit.place_forget()
         navFile2.config(command=TopWidgets.show)
 
-        
-
-def maincommand(a):
-    liner.addCodeLine(a)
 
 #other window aspect
 canvas = Canvas(root,width=10000,height=45,background="#576F72",highlightthickness=0,bd=0,relief="ridge")
