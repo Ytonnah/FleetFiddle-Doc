@@ -95,10 +95,13 @@ Fz_Field.place(x=500,y=55,width=50,height=20)
 Fz_FixedSize = Button(text="v")
 Fz_FixedSize.place(x=550,y=55,width=20,height=20)
 
+#OPTIMIZE THIS CODE LATER
 def deletePlaceholderText(event):#functions that deletes the placeholder text(WORKS NOW)
     a = textpad.get("1.0","1.21")
-    if event and a == placeholderText1:
+    plcd = placeholderText1 in a
+    if event and plcd:
         textpad.delete("1.0","1.21")
+        textpad.config(fg="black")
         print("pingpong")
         '''
         Tkinter text indexing guide:
@@ -106,19 +109,27 @@ def deletePlaceholderText(event):#functions that deletes the placeholder text(WO
         "1.0" means line 1 and the 0 index character or first character
         "1.21" means line 1 character 21
         '''
-        
+def insertPlaceholderTExt(event):
+    a = textpad.get("0.1","1.40")
+    plcd = placeholderText1 in a
+    if event and plcd==False and len(a) == 0:
+        textpad.insert(END,placeholderText1)
+        textpad.config(font=("calibri",12),fg="#808080")
+        print("bong!")
+    elif event and plcd==False and len != 0:
+        print("boop")#there, fixed somehow
         
 
 #text field goes here
-placeholderText1 = "Type something here"
+placeholderText1 = "$/Type something here"
 textpad = Text(bd=0)
 #textpad.insert(END,"0\t")
 textpad.config(font=("calibri",12),fg="#808080")
-textpad.place(x=350,y=200,width=800,height=1500)
+textpad.place(x=350,y=300,width=800,height=1500)
 textpad.insert(END,placeholderText1)
 textpad.tag_add("plc","1.0","1.10") #marker
-
 textpad.bind('<FocusIn>',deletePlaceholderText)
+textpad.bind('<FocusOut>',insertPlaceholderTExt)
 #textpad.bind('<Return>',maincommand)
 
 root.mainloop()
