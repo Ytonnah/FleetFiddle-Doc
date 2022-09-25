@@ -15,7 +15,7 @@ root.config(background="#E4DCCF")#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
 #MAIN FRAME
-frm = Frame(root,padding=10)
+frm = Frame(root,padding=0)
 frm.place()
 
 #WIDGET STYLE SETUP GOES HERE
@@ -74,20 +74,41 @@ edit.place_forget()
 
 
 #1. the font alignment buttons (left,centered, right)
-alignment_y = 66 #base y alignment
+alignment_y = 65 #base y alignment
 alignment_label = Label(text="Alignment:").place(x=845,y=(alignment_y - 20))
+bt_aspr = 30
+img_aspr = 30 #image aspect ratio
 
-L_Img = PhotoImage(file="Icons\Left_icon.png")
-L_Img.zoom(50,20)#need to Fix image button in order to display properly
+alBtn = Style()
+alBtn.theme_use("default")
+alBtn.configure("A.TButton",relief="flat",background="#3D8361",padding=0)
+alBtn.map("A.TButton",background = [('active', "#3D8361")])
 
-L_allignment = Button(text='Left',image=L_Img) #maybe replace it with icons later on
-L_allignment.place(x=800,y=alignment_y,width=50,height=50)
+#left align btn
+l_img = Image.open("Icons\Left_icon.png")
+r_l_img = l_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
+L_img = ImageTk.PhotoImage(r_l_img)
 
-C_allignment = Button(text='Cntr') #maybe replace it with icons later on
-C_allignment.place(x=850,y=alignment_y,width=50,height=50)
+AL_x = 830
+L_allignment = Button(text="",image=L_img,compound="center",style="A.TButton",takefocus=False) #worked now. need it to fit in btn
+L_allignment.place(x=AL_x,y=alignment_y,width=bt_aspr,height=bt_aspr) 
 
-R_allignment = Button(text='Rght') #maybe replace it with icons later on
-R_allignment.place(x=900,y=alignment_y,width=50,height=50)
+#center align btn
+c_img = Image.open("Icons\Center_icon.png")
+r_c_img = c_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
+C_img = ImageTk.PhotoImage(r_c_img)
+
+AL_x2 = AL_x+bt_aspr+2
+C_allignment = Button(root,text='',image=C_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
+C_allignment.place(x=AL_x2,y=alignment_y,width=bt_aspr,height=bt_aspr)
+
+#right align btn
+r_img = Image.open("Icons\Right_icon.png")
+r_r_img = r_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
+R_img = ImageTk.PhotoImage(r_r_img)
+AL_x3 = AL_x2 + bt_aspr +2
+R_allignment = Button(text='',image=R_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
+R_allignment.place(x=AL_x3,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
 
 #2. the font Size field and fixed size buttons
@@ -125,16 +146,16 @@ def insertPlaceholderTExt(event):
         print("boop")#there, fixed somehow
         #make sure it also detect spaces
 
+
 #text field goes here
 placeholderText1 = "Type something here"
 textpad = Text(bd=0)
-#textpad.insert(END,"0\t")
 textpad.config(font=("calibri",12,"italic"),fg="#808080")
 textpad.place(x=350,y=300,width=800,height=1500)
 textpad.insert(END,placeholderText1)
 textpad.tag_add("plc","1.0","1.10") #marker
 textpad.bind('<FocusIn>',deletePlaceholderText)
 textpad.bind('<FocusOut>',insertPlaceholderTExt)
-#textpad.bind('<Return>',maincommand)
+
 
 root.mainloop()
