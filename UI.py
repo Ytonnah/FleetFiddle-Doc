@@ -29,7 +29,7 @@ test out core features. then move it on a separate library later
 
 class TopWidgets:
     def show():
-        edit.place(x= 90,y=28,width=75,height=300)#reseting the plcement
+        edit.place(x= 90,y=80,width=75,height=300)#reseting the plcement
         navFile2.config(command=TopWidgets.hide)
     def hide():
         edit.place_forget()
@@ -37,28 +37,35 @@ class TopWidgets:
 
 
 #other window aspect
-canvas = Canvas(root,width=10000,height=45,background="#576F72",highlightthickness=0,bd=0,relief="ridge")
+canvas = Canvas(root,width=10000,height=80,background="#576F72",highlightthickness=0,bd=0,relief="ridge")
 canvas.place(x=0,y=0)
-canvas2 = Canvas(root,width=10000,height=60,background="#3D8361",highlightthickness=0,bd=0,relief="ridge")
-canvas2.place(x=0,y=45)
+canvas2 = Canvas(root,width=10000,height=50,background="#3D8361",highlightthickness=0,bd=0,relief="ridge")
+canvas2.place(x=0,y=80)
 
-
+paper_y = 250
 paperplace = Canvas(root,width=1000,height=2000,background="#FFFFFF",highlightthickness=0,bd=0,relief="ridge")
-paperplace.place(x=250,y=150)
+paperplace.place(x=250,y=paper_y)
 
 
 #widgets goes here
 style1 = Style()
 style1.configure('Custom.TButton',font=("calibri",11),background="#7D9D9C")
 
+#registered name of Document goes here:
+Docname = Entry()
+Docname.place(x=10,y=13,width=250,height=30)
+Docname.insert(END," \t Document") #add document text size to fixed big default
+
+
 #very top nav bar goes here
+nav_y = 50
 navFile1 = Button(text="File",style='Custom.TButton')
 navFile1.config()
-navFile1.place(width=75,height=23,x=10,y=6)
+navFile1.place(width=75,height=23,x=10,y=nav_y)
 
 navFile2 = Button(text="Edit",style='Custom.TButton')
 navFile2.config (command=TopWidgets.show)
-navFile2.place(width=75,height=23,x=90,y=6)
+navFile2.place(width=75,height=23,x=90,y=nav_y)
 #navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
 #word editing utilities goes here.
 
@@ -73,18 +80,18 @@ edit.place_forget()
 
 
 #1. the font alignment buttons (left,centered, right)
-alignment_y = 65 #base y alignment
-alignment_label = Label(text="Alignment:").place(x=845,y=(alignment_y - 20))
-bt_aspr = 30
-img_aspr = 30 #image aspect ratio
-
-alBtn = Style()
-alBtn.theme_use("default")
-alBtn.configure("A.TButton",relief="flat",background="#3D8361",padding=0)
-alBtn.map("A.TButton",background = [('active', "#3D8361")])
-
-#left align btn
 class Alignment_tools:
+
+    alignment_y = 87 #base y alignment
+    alignment_label = Label(text="Alignment:").place(x=845,y=(alignment_y - 20))
+    bt_aspr = 30
+    img_aspr = 30 #image aspect ratio
+
+    alBtn = Style()
+    alBtn.theme_use("default")
+    alBtn.configure("A.TButton",relief="flat",background="#3D8361",padding=0)
+    alBtn.map("A.TButton",background = [('active', "#3D8361")])
+    #left align btn
     l_img = Image.open("Icons\Left_icon.png")
     r_l_img = l_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
     L_img = ImageTk.PhotoImage(r_l_img)
@@ -110,16 +117,21 @@ class Alignment_tools:
     R_allignment = Button(text='',image=R_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
     R_allignment.place(x=AL_x3,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
+class fontSizeTools:
+    #2. the font Size field and fixed size buttons
+    bt_y = 90
+    Fz_btnW,Fz_BtnH = 20,20
+    field_x = 600
 
-#2. the font Size field and fixed size buttons
-Label2 = Label(text="Font Size:").place(x=445,y=55,width=55,height=20)
+    Label2 = Label(text="Font Size:").place(x=580,y=(bt_y-22),width=55,height=20)
+    Fz_Field = Entry()
+    Fz_Field.insert(0,"12")
+    Fz_Field.place(x=field_x,y=bt_y,width=25,height=20)
 
-Fz_Field = Entry()
-Fz_Field.insert(0,"fsz: ")
-Fz_Field.place(x=500,y=55,width=50,height=20)
-
-Fz_FixedSize = Button(text="v")
-Fz_FixedSize.place(x=550,y=55,width=20,height=20)
+    addFontSize = Button(text="+")
+    addFontSize.place(x=(field_x +Fz_btnW+6),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
+    decreaseFontSize = Button(text="-")
+    decreaseFontSize.place(x=(field_x-Fz_btnW),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
 
 #OPTIMIZE THIS CODE LATER
 class emptyDocCont:
@@ -147,7 +159,7 @@ class emptyDocCont:
 placeholderText1 = "Type something here"
 textpad = Text(bd=0)
 textpad.config(font=("calibri",12,"italic"),fg="#808080")
-textpad.place(x=350,y=300,width=800,height=1500)
+textpad.place(x=350,y=(paper_y+100),width=800,height=1500)
 textpad.insert(END,placeholderText1)
 textpad.tag_add("plc","1.0","1.10") #marker
 textpad.bind('<FocusIn>',emptyDocCont.deletePlaceholderText)
