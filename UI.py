@@ -85,30 +85,31 @@ alBtn.configure("A.TButton",relief="flat",background="#3D8361",padding=0)
 alBtn.map("A.TButton",background = [('active', "#3D8361")])
 
 #left align btn
-l_img = Image.open("Icons\Left_icon.png")
-r_l_img = l_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
-L_img = ImageTk.PhotoImage(r_l_img)
+class Alignment_tools:
+    l_img = Image.open("Icons\Left_icon.png")
+    r_l_img = l_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
+    L_img = ImageTk.PhotoImage(r_l_img)
 
-AL_x = 830
-L_allignment = Button(text="",image=L_img,compound="center",style="A.TButton",takefocus=False) #worked now. need it to fit in btn
-L_allignment.place(x=AL_x,y=alignment_y,width=bt_aspr,height=bt_aspr) 
+    AL_x = 830
+    L_allignment = Button(text="",image=L_img,compound="center",style="A.TButton",takefocus=False) #worked now. need it to fit in btn
+    L_allignment.place(x=AL_x,y=alignment_y,width=bt_aspr,height=bt_aspr) 
 
-#center align btn
-c_img = Image.open("Icons\Center_icon.png")
-r_c_img = c_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
-C_img = ImageTk.PhotoImage(r_c_img)
+    #center align btn
+    c_img = Image.open("Icons\Center_icon.png")
+    r_c_img = c_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
+    C_img = ImageTk.PhotoImage(r_c_img)
 
-AL_x2 = AL_x+bt_aspr+2
-C_allignment = Button(root,text='',image=C_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
-C_allignment.place(x=AL_x2,y=alignment_y,width=bt_aspr,height=bt_aspr)
+    AL_x2 = AL_x+bt_aspr+2
+    C_allignment = Button(root,text='',image=C_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
+    C_allignment.place(x=AL_x2,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
-#right align btn
-r_img = Image.open("Icons\Right_icon.png")
-r_r_img = r_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
-R_img = ImageTk.PhotoImage(r_r_img)
-AL_x3 = AL_x2 + bt_aspr +2
-R_allignment = Button(text='',image=R_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
-R_allignment.place(x=AL_x3,y=alignment_y,width=bt_aspr,height=bt_aspr)
+    #right align btn
+    r_img = Image.open("Icons\Right_icon.png")
+    r_r_img = r_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
+    R_img = ImageTk.PhotoImage(r_r_img)
+    AL_x3 = AL_x2 + bt_aspr +2
+    R_allignment = Button(text='',image=R_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
+    R_allignment.place(x=AL_x3,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
 
 #2. the font Size field and fixed size buttons
@@ -142,8 +143,8 @@ def insertPlaceholderTExt(event):
         textpad.insert(END,placeholderText1)
         textpad.config(font=("calibri",12,"italic"),fg="#808080")
         print("bong!")
-    elif event and plcd==False and len != 0:
-        print("boop")#there, fixed somehow
+    #elif event and plcd==False and len != 0:
+    #    print("boop")#there, fixed somehow
         #make sure it also detect spaces
 
 
