@@ -30,7 +30,6 @@ test out core features. then move it on a separate library later
 class TopWidgets:
     def show():
         edit.place(x= 90,y=28,width=75,height=300)#reseting the plcement
-        
         navFile2.config(command=TopWidgets.hide)
     def hide():
         edit.place_forget()
@@ -123,30 +122,26 @@ Fz_FixedSize = Button(text="v")
 Fz_FixedSize.place(x=550,y=55,width=20,height=20)
 
 #OPTIMIZE THIS CODE LATER
-def deletePlaceholderText(event):#functions that deletes the placeholder text(WORKS NOW)
-    a = textpad.get("1.0","1.21")
-    plcd = placeholderText1 in a
-    if event and plcd:
-        textpad.delete("1.0","1.21")
-        textpad.config(fg="black",font="italic")
-        print("pingpong")
-        '''
-        Tkinter text indexing guide:
-        text widget has index pointer system.
-        "1.0" means line 1 and the 0 index character or first character
-        "1.21" means line 1 character 21
-        '''
-def insertPlaceholderTExt(event):
-    a = textpad.get("0.1","1.40")
-    plcd = placeholderText1 in a
-    if event and plcd==False and len(a) == 0:
-        textpad.insert(END,placeholderText1)
-        textpad.config(font=("calibri",12,"italic"),fg="#808080")
-        print("bong!")
-    #elif event and plcd==False and len != 0:
-    #    print("boop")#there, fixed somehow
-        #make sure it also detect spaces
-
+class emptyDocCont:
+    def deletePlaceholderText(event):#functions that deletes the placeholder text(WORKS NOW)
+        a = textpad.get("1.0","1.21")
+        plcd = placeholderText1 in a
+        if event and plcd:
+            textpad.delete("1.0","1.21")
+            textpad.config(fg="black",font="italic")
+            '''
+            Tkinter text indexing guide:
+            text widget has index pointer system.
+            "1.0" means line 1 and the 0 index character or first character
+            "1.21" means line 1 character 21
+            '''
+    def insertPlaceholderText(event):
+        a = textpad.get("0.1","1.40")
+        plcd = placeholderText1 in a
+        if event and plcd==False and len(a) == 0:
+            textpad.insert(END,placeholderText1)
+            textpad.config(font=("calibri",12,"italic"),fg="#808080")
+        
 
 #text field goes here
 placeholderText1 = "Type something here"
@@ -155,8 +150,8 @@ textpad.config(font=("calibri",12,"italic"),fg="#808080")
 textpad.place(x=350,y=300,width=800,height=1500)
 textpad.insert(END,placeholderText1)
 textpad.tag_add("plc","1.0","1.10") #marker
-textpad.bind('<FocusIn>',deletePlaceholderText)
-textpad.bind('<FocusOut>',insertPlaceholderTExt)
+textpad.bind('<FocusIn>',emptyDocCont.deletePlaceholderText)
+textpad.bind('<FocusOut>',emptyDocCont.insertPlaceholderText)
 
 
 root.mainloop()
