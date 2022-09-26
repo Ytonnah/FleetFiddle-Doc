@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter.ttk import *
+import tkinter.ttk as ttk
 from tkinter import Text,Canvas
 from PIL import Image, ImageTk
 #import time
@@ -15,11 +15,11 @@ root.config(background="#E4DCCF")#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
 #MAIN FRAME
-frm = Frame(root,padding=0)
+frm = ttk.Frame(root)
 frm.place()
 
 #WIDGET STYLE SETUP GOES HERE
-s = Style()
+s = ttk.Style()
 s.configure("My.TFrame",background="red")
 
 
@@ -48,25 +48,27 @@ paperplace.place(x=250,y=paper_y)
 
 
 #widgets goes here
-style1 = Style()
+style1 = ttk.Style()
 style1.configure('Custom.TButton',font=("calibri",11),background="#576F72")
 
 #registered name of Document goes here:
-DocnameS = Style()
-DocnameS.configure('DcS.TEntry',bg="red",font=("calibri",30))#ISSUE: style does not apply on the entry widget.
+DocnameS = ttk.Style()
+DocnameS.configure('TEntry',bg="red",font=("calibri",30))#ISSUE: style does not apply on the entry widget.
 
-Docname = Entry(root,style='DcS.TEntry')
+
+
+Docname = Entry(root)
 Docname.place(x=10,y=13,width=250,height=30)
 Docname.insert(END,"   Document")
 
 
 #very top nav bar goes here
 nav_y = 50
-navFile1 = Button(text="File",style='Custom.TButton')
+navFile1 = Button(text="File")
 navFile1.config()
 navFile1.place(width=75,height=23,x=10,y=nav_y)
 
-navFile2 = Button(text="Edit",style='Custom.TButton')
+navFile2 = Button(text="Edit")
 navFile2.config (command=TopWidgets.show)
 navFile2.place(width=75,height=23,x=90,y=nav_y)
 #navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
@@ -74,7 +76,7 @@ navFile2.place(width=75,height=23,x=90,y=nav_y)
 
 
 #pop widgets goes here 
-edit = Frame(root,padding=10,style="My.TFrame")
+edit = Frame(root)
 edit.config()#make it so the the widget frame display is hidden
 #edit.place(x= 10,y=20,width=50,height=100)
 edit.place_forget()
@@ -90,7 +92,7 @@ class Alignment_tools:
     bt_aspr = 30
     img_aspr = 30 #image aspect ratio
 
-    alBtn = Style()
+    alBtn = ttk.Style()
     alBtn.theme_use("default")
     alBtn.configure("A.TButton",relief="flat",background="#3D8361",padding=0)
     alBtn.map("A.TButton",background = [('active', "#3D8361")])
@@ -100,7 +102,7 @@ class Alignment_tools:
     L_img = ImageTk.PhotoImage(r_l_img)
 
     AL_x = 830
-    L_allignment = Button(text="",image=L_img,compound="center",style="A.TButton",takefocus=False) #worked now. need it to fit in btn
+    L_allignment = Button(text="",image=L_img,compound="center",takefocus=False) #worked now. need it to fit in btn
     L_allignment.place(x=AL_x,y=alignment_y,width=bt_aspr,height=bt_aspr) 
 
     #center align btn
@@ -109,7 +111,7 @@ class Alignment_tools:
     C_img = ImageTk.PhotoImage(r_c_img)
 
     AL_x2 = AL_x+bt_aspr+2
-    C_allignment = Button(root,text='',image=C_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
+    C_allignment = Button(root,text='',image=C_img,compound="center",takefocus=False) #maybe replace it with icons later on
     C_allignment.place(x=AL_x2,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
     #right align btn
@@ -117,7 +119,7 @@ class Alignment_tools:
     r_r_img = r_img.resize((img_aspr,img_aspr), Image.Resampling.LANCZOS)
     R_img = ImageTk.PhotoImage(r_r_img)
     AL_x3 = AL_x2 + bt_aspr +2
-    R_allignment = Button(text='',image=R_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
+    R_allignment = Button(text='',image=R_img,compound="center",takefocus=False) #maybe replace it with icons later on
     R_allignment.place(x=AL_x3,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
 class fontSizeTools:
