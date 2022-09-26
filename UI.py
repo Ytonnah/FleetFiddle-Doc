@@ -1,8 +1,8 @@
 from tkinter import *
 import tkinter.ttk as ttk
-from tkinter.ttk import Button 
+from tkinter.ttk import Button,Combobox
 
-from tkinter import Text,Canvas
+from tkinter import Text,Canvas 
 from PIL import Image, ImageTk
 #import time
 #import keyboard
@@ -67,7 +67,7 @@ Docname.insert(END,"   Document")
 #NAVIGATION AND ESSENTIALS
 style1 = ttk.Style()
 style1.theme_use("default")
-style1.configure('Nav.TButton',font=("calibri",11),relief="flat",background=Beige1)
+style1.configure('Nav.TButton',font=("calibri",11,"bold"),relief="flat",background=Beige1,foreground=Green1)
 style1.map('Nav.TButton',background =[('active',Beige1)])
 
 nav_y = 58 #the y-axis of the navigation widget is just the same
@@ -78,11 +78,17 @@ navFile1.place(width=75,height=23,x=35,y=nav_y)
 
 navFile2 = Button(text="Edit",style='Nav.TButton',takefocus=False)
 navFile2.config (command=TopWidgets.show)
-navFile2.place(width=75,height=23,x=(90+35 - 12),y=nav_y)
+navFile2.place(width=75,height=23,x=(75+35+2),y=nav_y)
 #navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
 #word editing utilities goes here.
 
+navFile3 = Button(text="Insert",style='Nav.TButton',takefocus=False)
+navFile3.config()
+navFile3.place(width=75,height=23,x=((75*2)+35+ 4),y=nav_y)
 
+navFile4 = Button(text="View",style='Nav.TButton',takefocus=False)
+navFile4.config()
+navFile4.place(width=75,height=23,x=((75*3)+35+ 6),y=nav_y)
 #pop widgets goes here 
 edit = Frame(root)
 edit.config()#make it so the the widget frame display is hidden
@@ -146,6 +152,17 @@ class fontSizeTools:
     addFontSize.place(x=(field_x +Fz_btnW+6),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
     decreaseFontSize = Button(text="-")
     decreaseFontSize.place(x=(field_x-Fz_btnW),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
+
+class fontStyleSelection:
+    #add styling here
+    fstyle = Combobox()
+    fstyle.insert(END,"Calibri")
+    fstyle.place(y =Alignment_tools.alignment_y,x=430,width= 120,height=25)
+    fstyle['values'] = ["Default","Default2","Default3"]
+    fstyle['state'] = 'readonly'
+
+
+
 
 #OPTIMIZE THIS CODE LATER
 class emptyDocCont:
