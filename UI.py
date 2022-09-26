@@ -8,21 +8,26 @@ from PIL import Image, ImageTk
 #import keyboard
 #import os
 
+
+#INCLUDE BASIC COLORS FOR REUSABILITY
+Green1 = "#1C6758"
+Green2 = "#3D8361"
+Beige1 = "#D6CDA4"
+
 #import random
 root = Tk()
 width,height = root.winfo_screenwidth(),root.winfo_screenheight()
 canvasSize = root.geometry('%dx%d+0+0'%(width,height))
 root.title('WDocProj')
-root.config(background="#E4DCCF")#hex colors must have the hashtag in specifying
+root.config(background=Beige1)#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
 #MAIN FRAME
 frm = ttk.Frame(root,padding=0)
 frm.place()
 
-#WIDGET STYLE SETUP GOES HERE
-s = ttk.Style()
-s.configure("My.TFrame",background="red")
+#implementation of color scheme goes here
+
 
 
 '''
@@ -39,7 +44,7 @@ class TopWidgets:
 
 
 #other window aspect
-canvas = Canvas(root,width=10000,height=80,background="#576F72",highlightthickness=0,bd=0,relief="ridge")
+canvas = Canvas(root,width=10000,height=80,background=Green1,highlightthickness=0,bd=0,relief="ridge")
 canvas.place(x=0,y=0)
 canvas2 = Canvas(root,width=10000,height=50,background="#3D8361",highlightthickness=0,bd=0,relief="ridge")
 canvas2.place(x=0,y=80)
@@ -49,26 +54,31 @@ paperplace = Canvas(root,width=1000,height=2000,background="#FFFFFF",highlightth
 paperplace.place(x=250,y=paper_y)
 
 
-#widgets goes here
-style1 = ttk.Style()
-style1.configure('Custom.TButton',font=("calibri",11),background="#576F72")
+
 
 #registered name of Document goes here:
 Docname = Entry(root)
-Docname.config(bg="#576F72",font=("calibri",24),bd=0)
+Docname.config(bg=Green1,font=("calibri",22,"bold"),fg=Beige1,bd=0)
 Docname.place(x=10,y=13,width=250,height=30)
 Docname.insert(END,"   Document")
 
 
-#very top nav bar goes here
-nav_y = 50
-navFile1 = Button(text="File")
-navFile1.config()
-navFile1.place(width=75,height=23,x=10,y=nav_y)
 
-navFile2 = Button(text="Edit")
+#NAVIGATION AND ESSENTIALS
+style1 = ttk.Style()
+style1.theme_use("default")
+style1.configure('Nav.TButton',font=("calibri",11),relief="flat",background=Beige1)
+style1.map('Nav.TButton',background =[('active',Beige1)])
+
+nav_y = 58 #the y-axis of the navigation widget is just the same
+
+navFile1 = Button(text="File",style='Nav.TButton',takefocus=False)
+navFile1.config()
+navFile1.place(width=75,height=23,x=35,y=nav_y)
+
+navFile2 = Button(text="Edit",style='Nav.TButton',takefocus=False)
 navFile2.config (command=TopWidgets.show)
-navFile2.place(width=75,height=23,x=90,y=nav_y)
+navFile2.place(width=75,height=23,x=(90+35 - 12),y=nav_y)
 #navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
 #word editing utilities goes here.
 
@@ -86,7 +96,7 @@ edit.place_forget()
 #1. the font alignment buttons (left,centered, right)
 class Alignment_tools:
 
-    alignment_y = 87 #base y alignment
+    alignment_y = 92 #base y alignment
     alignment_label = Label(text="Alignment:").place(x=845,y=(alignment_y - 20))
     bt_aspr = 30
     img_aspr = 30 #image aspect ratio
@@ -123,7 +133,7 @@ class Alignment_tools:
 
 class fontSizeTools:
     #2. the font Size field and fixed size buttons
-    bt_y = 90
+    bt_y = (Alignment_tools.alignment_y + 4)
     Fz_btnW,Fz_BtnH = 20,20
     field_x = 600
 
