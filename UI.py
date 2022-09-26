@@ -49,12 +49,15 @@ paperplace.place(x=250,y=paper_y)
 
 #widgets goes here
 style1 = Style()
-style1.configure('Custom.TButton',font=("calibri",11),background="#7D9D9C")
+style1.configure('Custom.TButton',font=("calibri",11),background="#576F72")
 
 #registered name of Document goes here:
-Docname = Entry()
+DocnameS = Style()
+DocnameS.configure('DcS.TEntry',bg="red",font=("calibri",30))#ISSUE: style does not apply on the entry widget.
+
+Docname = Entry(root,style='DcS.TEntry')
 Docname.place(x=10,y=13,width=250,height=30)
-Docname.insert(END," \t Document") #add document text size to fixed big default
+Docname.insert(END,"   Document")
 
 
 #very top nav bar goes here
@@ -93,7 +96,7 @@ class Alignment_tools:
     alBtn.map("A.TButton",background = [('active', "#3D8361")])
     #left align btn
     l_img = Image.open("Icons\Left_icon.png")
-    r_l_img = l_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
+    r_l_img = l_img.resize((img_aspr,img_aspr), Image.Resampling.LANCZOS)
     L_img = ImageTk.PhotoImage(r_l_img)
 
     AL_x = 830
@@ -102,7 +105,7 @@ class Alignment_tools:
 
     #center align btn
     c_img = Image.open("Icons\Center_icon.png")
-    r_c_img = c_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
+    r_c_img = c_img.resize((img_aspr,img_aspr), Image.Resampling.LANCZOS)
     C_img = ImageTk.PhotoImage(r_c_img)
 
     AL_x2 = AL_x+bt_aspr+2
@@ -111,7 +114,7 @@ class Alignment_tools:
 
     #right align btn
     r_img = Image.open("Icons\Right_icon.png")
-    r_r_img = r_img.resize((img_aspr,img_aspr), Image.ANTIALIAS)
+    r_r_img = r_img.resize((img_aspr,img_aspr), Image.Resampling.LANCZOS)
     R_img = ImageTk.PhotoImage(r_r_img)
     AL_x3 = AL_x2 + bt_aspr +2
     R_allignment = Button(text='',image=R_img,compound="center",style="A.TButton",takefocus=False) #maybe replace it with icons later on
