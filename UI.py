@@ -1,5 +1,7 @@
 from tkinter import *
 import tkinter.ttk as ttk
+from tkinter.ttk import Button 
+
 from tkinter import Text,Canvas
 from PIL import Image, ImageTk
 #import time
@@ -15,7 +17,7 @@ root.config(background="#E4DCCF")#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
 #MAIN FRAME
-frm = ttk.Frame(root)
+frm = ttk.Frame(root,padding=0)
 frm.place()
 
 #WIDGET STYLE SETUP GOES HERE
@@ -52,12 +54,8 @@ style1 = ttk.Style()
 style1.configure('Custom.TButton',font=("calibri",11),background="#576F72")
 
 #registered name of Document goes here:
-DocnameS = ttk.Style()
-DocnameS.configure('TEntry',bg="red",font=("calibri",30))#ISSUE: style does not apply on the entry widget.
-
-
-
 Docname = Entry(root)
+Docname.config(bg="#576F72",font=("calibri",24),bd=0)
 Docname.place(x=10,y=13,width=250,height=30)
 Docname.insert(END,"   Document")
 
@@ -78,11 +76,12 @@ navFile2.place(width=75,height=23,x=90,y=nav_y)
 #pop widgets goes here 
 edit = Frame(root)
 edit.config()#make it so the the widget frame display is hidden
-#edit.place(x= 10,y=20,width=50,height=100)
 edit.place_forget()
 
-#Add the content tools bar(below the nav bars)
 
+
+
+#Add the content tools bar(below the nav bars)
 
 #1. the font alignment buttons (left,centered, right)
 class Alignment_tools:
@@ -102,7 +101,7 @@ class Alignment_tools:
     L_img = ImageTk.PhotoImage(r_l_img)
 
     AL_x = 830
-    L_allignment = Button(text="",image=L_img,compound="center",takefocus=False) #worked now. need it to fit in btn
+    L_allignment = Button(text="",image=L_img,compound="center",takefocus=False,style="A.TButton") #worked now. need it to fit in btn
     L_allignment.place(x=AL_x,y=alignment_y,width=bt_aspr,height=bt_aspr) 
 
     #center align btn
@@ -111,7 +110,7 @@ class Alignment_tools:
     C_img = ImageTk.PhotoImage(r_c_img)
 
     AL_x2 = AL_x+bt_aspr+2
-    C_allignment = Button(root,text='',image=C_img,compound="center",takefocus=False) #maybe replace it with icons later on
+    C_allignment = Button(root,text='',image=C_img,compound="center",takefocus=False,style="A.TButton") #maybe replace it with icons later on
     C_allignment.place(x=AL_x2,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
     #right align btn
@@ -119,7 +118,7 @@ class Alignment_tools:
     r_r_img = r_img.resize((img_aspr,img_aspr), Image.Resampling.LANCZOS)
     R_img = ImageTk.PhotoImage(r_r_img)
     AL_x3 = AL_x2 + bt_aspr +2
-    R_allignment = Button(text='',image=R_img,compound="center",takefocus=False) #maybe replace it with icons later on
+    R_allignment = Button(text='',image=R_img,compound="center",takefocus=False,style="A.TButton") #maybe replace it with icons later on
     R_allignment.place(x=AL_x3,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
 class fontSizeTools:
