@@ -72,20 +72,21 @@ style1.map('Nav.TButton',background =[('active',Beige1)])
 
 nav_y = 58 #the y-axis of the navigation widget is just the same
 
+#FILE
 navFile1 = Button(text="File",style='Nav.TButton',takefocus=False)
 navFile1.config()
 navFile1.place(width=75,height=23,x=35,y=nav_y)
-
+#EDIT
 navFile2 = Button(text="Edit",style='Nav.TButton',takefocus=False)
 navFile2.config (command=TopWidgets.show)
 navFile2.place(width=75,height=23,x=(75+35+2),y=nav_y)
 #navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
 #word editing utilities goes here.
-
+#INSERT
 navFile3 = Button(text="Insert",style='Nav.TButton',takefocus=False)
 navFile3.config()
 navFile3.place(width=75,height=23,x=((75*2)+35+ 4),y=nav_y)
-
+#VIEW
 navFile4 = Button(text="View",style='Nav.TButton',takefocus=False)
 navFile4.config()
 navFile4.place(width=75,height=23,x=((75*3)+35+ 6),y=nav_y)
