@@ -22,13 +22,12 @@ root.title('WDocProj')
 root.config(background=Beige1)#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
+root.state('zoomed')#this work
 #MAIN FRAME
 frm = ttk.Frame(root,padding=0)
 frm.place()
 
 #implementation of color scheme goes here
-
-
 
 '''
 test out core features. then move it on a separate library later
@@ -48,6 +47,7 @@ canvas = Canvas(root,width=10000,height=80,background=Green1,highlightthickness=
 canvas.place(x=0,y=0)
 canvas2 = Canvas(root,width=10000,height=50,background="#3D8361",highlightthickness=0,bd=0,relief="ridge")
 canvas2.place(x=0,y=80)
+canvas2.create_rectangle(10000,60,-10,0,outline=Beige1,width=5)
 
 paper_y = 250
 paperplace = Canvas(root,width=1000,height=2000,background="#FFFFFF",highlightthickness=0,bd=0,relief="ridge")
@@ -57,11 +57,35 @@ paperplace.place(x=250,y=paper_y)
 
 
 #registered name of Document goes here:
-Docname = Entry(root)
-Docname.config(bg=Green1,font=("calibri",22,"bold"),fg=Beige1,bd=0)
-Docname.place(x=10,y=13,width=250,height=30)
-Docname.insert(END,"   Document")
+class docnameReg:
+    placeholderText2 = "BlankDoc"
 
+    def removeFocus(event): 
+        #a =Docname.get(0,END)
+        a =Docname.get()
+        if event:
+            root.focus()
+            Docname.config(bd=0)
+            if a[0]!=" ":
+                Docname.insert(0,"  ")
+            elif a == "            ":
+                Docname.insert(3,docnameReg.placeholderText2)
+
+            
+    def active(event):
+        a =Docname.get()#fix this one later
+        if event:
+            Docname.config(bd=1)
+            if a[0]!=" ":
+                Docname.insert(0,"  ")
+
+
+Docname = Entry(root)
+Docname.config(bg=Green1,font=("calibri",22,"bold"),fg=Beige1,bd=0,justify="left")
+Docname.place(x=45,y=13,width=250,height=30)
+Docname.insert(END,"Document")
+Docname.bind('<FocusIn>',docnameReg.active)
+Docname.bind('<Leave>',docnameReg.removeFocus)#trial Bind Widget
 
 
 #NAVIGATION AND ESSENTIALS
@@ -72,21 +96,20 @@ style1.map('Nav.TButton',background =[('active',Beige1)])
 
 nav_y = 58 #the y-axis of the navigation widget is just the same
 
-#FILE
 navFile1 = Button(text="File",style='Nav.TButton',takefocus=False)
 navFile1.config()
 navFile1.place(width=75,height=23,x=35,y=nav_y)
-#EDIT
+
 navFile2 = Button(text="Edit",style='Nav.TButton',takefocus=False)
 navFile2.config (command=TopWidgets.show)
 navFile2.place(width=75,height=23,x=(75+35+2),y=nav_y)
 #navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
 #word editing utilities goes here.
-#INSERT
+
 navFile3 = Button(text="Insert",style='Nav.TButton',takefocus=False)
 navFile3.config()
 navFile3.place(width=75,height=23,x=((75*2)+35+ 4),y=nav_y)
-#VIEW
+
 navFile4 = Button(text="View",style='Nav.TButton',takefocus=False)
 navFile4.config()
 navFile4.place(width=75,height=23,x=((75*3)+35+ 6),y=nav_y)
@@ -96,12 +119,33 @@ edit.config()#make it so the the widget frame display is hidden
 edit.place_forget()
 
 
+#SCROLLBAR Feature for page navigation
+pageScrollbar = Scrollbar(jump=0)
+pageScrollbar.place(x=1345,y=130,height=10000)
+
 
 
 #Add the content tools bar(below the nav bars)
 
 #1. the font alignment buttons (left,centered, right)
-class Alignment_tools:
+class Alignment_F:
+    '''
+        Alignment Functions:
+        -left align either(add no tab spaces, or remove tabs spaces when the line is currently
+        on center or right align)
+        -center Align removes or remove tab spaces depends on left or right alignment
+        -right Align adds tab spaces or mirror the index of start type oringin to the right and slide to left upon editing
+
+        REstraints: it must not modify placeholder text in textpad
+
+    '''
+    #Alignment functions goes here
+    def center():
+        #add event binds later
+        textpad.insert("0.0","\t\t\t\t.")
+        
+
+class Alignment_widget:
 
     alignment_y = 92 #base y alignment
     alignment_label = Label(text="Alignment:").place(x=845,y=(alignment_y - 20))
@@ -128,6 +172,7 @@ class Alignment_tools:
 
     AL_x2 = AL_x+bt_aspr+2
     C_allignment = Button(root,text='',image=C_img,compound="center",takefocus=False,style="A.TButton") #maybe replace it with icons later on
+    C_allignment.config(command=Alignment_F.center)
     C_allignment.place(x=AL_x2,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
     #right align btn
@@ -135,30 +180,35 @@ class Alignment_tools:
     r_r_img = r_img.resize((img_aspr,img_aspr), Image.Resampling.LANCZOS)
     R_img = ImageTk.PhotoImage(r_r_img)
     AL_x3 = AL_x2 + bt_aspr +2
-    R_allignment = Button(text='',image=R_img,compound="center",takefocus=False,style="A.TButton") #maybe replace it with icons later on
+    R_allignment = Button(text='',image=R_img,compound="right",takefocus=False,style="A.TButton") #maybe replace it with icons later on
     R_allignment.place(x=AL_x3,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
 class fontSizeTools:
     #2. the font Size field and fixed size buttons
-    bt_y = (Alignment_tools.alignment_y + 4)
+    bt_y = (Alignment_widget.alignment_y + 4)
     Fz_btnW,Fz_BtnH = 20,20
     field_x = 600
+    iconSize = 20
 
     Label2 = Label(text="Font Size:").place(x=580,y=(bt_y-22),width=55,height=20)
     Fz_Field = Entry()
     Fz_Field.insert(0,"12")
     Fz_Field.place(x=field_x,y=bt_y,width=25,height=20)
 
-    addFontSize = Button(text="+")
+    pl_img = Image.open("Icons\plusIC.png")
+    r_pl_img = pl_img.resize((iconSize,iconSize), Image.Resampling.LANCZOS)
+    PLs_img = ImageTk.PhotoImage(r_pl_img)
+
+    addFontSize = Button(compound=CENTER,image=PLs_img,takefocus=False,style="A.TButton")
     addFontSize.place(x=(field_x +Fz_btnW+6),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
     decreaseFontSize = Button(text="-")
     decreaseFontSize.place(x=(field_x-Fz_btnW),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
 
 class fontStyleSelection:
     #add styling here
-    fstyle = Combobox()
-    fstyle.insert(END,"Calibri")
-    fstyle.place(y =Alignment_tools.alignment_y,x=430,width= 120,height=25)
+    fstyle = Combobox() #disable the highlight
+    fstyle.insert(END,"Calibri") 
+    fstyle.place(y =Alignment_widget.alignment_y,x=490,width= 80,height=25)
     fstyle['values'] = ["Default","Default2","Default3"]
     fstyle['state'] = 'readonly'
 
@@ -183,19 +233,25 @@ class emptyDocCont:
         a = textpad.get("0.1","1.40")
         plcd = placeholderText1 in a
         if event and plcd==False and len(a) == 0:
+            print(event)
             textpad.insert(END,placeholderText1)
             textpad.config(font=("calibri",12,"italic"),fg="#808080")
+            root.focus()
+        
+
         
 
 #text field goes here
 placeholderText1 = "Type something here"
 textpad = Text(bd=0)
-textpad.config(font=("calibri",12,"italic"),fg="#808080")
-textpad.place(x=350,y=(paper_y+100),width=800,height=1500)
+textpad.config(font=("calibri",11,"italic"),fg="#808080")
+textpad.place(x=350,y=(paper_y+130),width=800,height=1500)
 textpad.insert(END,placeholderText1)
 textpad.tag_add("plc","1.0","1.10") #marker
 textpad.bind('<FocusIn>',emptyDocCont.deletePlaceholderText)
-textpad.bind('<FocusOut>',emptyDocCont.insertPlaceholderText)
+#textpad.bind('<FocusOut>',emptyDocCont.insertPlaceholderText)
+textpad.bind('<Leave>',emptyDocCont.insertPlaceholderText)
+
 
 
 root.mainloop()
