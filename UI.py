@@ -1,12 +1,8 @@
 from tkinter import *
 import tkinter.ttk as ttk
-from tkinter.ttk import Button,Combobox
-
-from tkinter import Text,Canvas 
+from tkinter.ttk import Button,Combobox,Menubutton
+from tkinter import Canvas 
 from PIL import Image, ImageTk
-#import time
-#import keyboard
-#import os
 
 
 #INCLUDE BASIC COLORS FOR REUSABILITY
@@ -16,9 +12,9 @@ Beige1 = "#D6CDA4"
 
 #import random
 root = Tk()
-width,height = root.winfo_screenwidth(),root.winfo_screenheight()
+width,height = root.winfo_screenwidth(),(root.winfo_screenheight()+1000)
 canvasSize = root.geometry('%dx%d+0+0'%(width,height))
-root.title('WDocProj')
+root.title('FleetFiddle')
 root.config(background=Beige1)#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
@@ -58,47 +54,57 @@ paperplace.place(x=250,y=paper_y)
 
 #registered name of Document goes here:
 class docnameReg:
-    placeholderText2 = "BlankDoc"
-
+    placeholderText2 = " Untitled"
     def removeFocus(event): 
-        #a =Docname.get(0,END)
         a =Docname.get()
         if event:
             root.focus()
             Docname.config(bd=0)
-            if a[0]!=" ":
-                Docname.insert(0,"  ")
-            elif a == "            ":
-                Docname.insert(3,docnameReg.placeholderText2)
+            #It also needs to autoselect upon clicking
+            if len(Docname.get())  == 0 and docnameReg.placeholderText2 not in a:#needs to detect empty strings
+                #Docname.config(fg="red")
+                Docname.delete(0,END)
+                Docname.config(fg="grey",font=("calibri",22,"bold"))
+                Docname.insert(0,docnameReg.placeholderText2)
+                
+            Docname.config(fg=Beige1)
 
             
     def active(event):
         a =Docname.get()#fix this one later
         if event:
             Docname.config(bd=1)
+            Docname.selection_range(0,END)
             if a[0]!=" ":
-                Docname.insert(0,"  ")
+                Docname.insert(0," ")
 
 
 Docname = Entry(root)
 Docname.config(bg=Green1,font=("calibri",22,"bold"),fg=Beige1,bd=0,justify="left")
-Docname.place(x=45,y=13,width=250,height=30)
+Docname.place(x=45,y=13,width=500,height=30)
 Docname.insert(END,"Document")
-Docname.bind('<FocusIn>',docnameReg.active)
-Docname.bind('<Leave>',docnameReg.removeFocus)#trial Bind Widget
+Docname.bind('<FocusIn>',docnameReg.active)#this one works well
+Docname.bind('<FocusOut>',docnameReg.removeFocus)#trial Bind Widget
 
 
-#NAVIGATION AND ESSENTIALS
+#NAVIGATION AND ESSENTIALS (note: use menu button widgets instead)
 style1 = ttk.Style()
 style1.theme_use("default")
 style1.configure('Nav.TButton',font=("calibri",11,"bold"),relief="flat",background=Beige1,foreground=Green1)
 style1.map('Nav.TButton',background =[('active',Beige1)])
+#add stying for menubutton
 
 nav_y = 58 #the y-axis of the navigation widget is just the same
 
-navFile1 = Button(text="File",style='Nav.TButton',takefocus=False)
+navFile1 = Menubutton(text="File",style='Nav.TButton',takefocus=False)
 navFile1.config()
 navFile1.place(width=75,height=23,x=35,y=nav_y)
+navFile1.menu = Menu(navFile1)
+navFile1["menu"] = navFile1.menu
+#nonfunctional options so far
+navFile1.menu.add_command(label="Open File")
+navFile1.menu.add_command(label="Save As")
+navFile1.menu.add_command(label="Print")
 
 navFile2 = Button(text="Edit",style='Nav.TButton',takefocus=False)
 navFile2.config (command=TopWidgets.show)
@@ -139,11 +145,23 @@ class Alignment_F:
         REstraints: it must not modify placeholder text in textpad
 
     '''
-    #Alignment functions goes here
+    #Alignment functions goes here (the ff are beta features improve na lang to)
     def center():
         #add event binds later
-        textpad.insert("0.0","\t\t\t\t.")
-        
+        a = textpad.get("1.0","1.22")
+        if a == placeholderText1:
+            print("placeholder text found!")
+        else:
+            textpad.insert("0.0","\t\t\t\t\t.")
+            #textpad.config("lineTEST",justify="center")
+            print("beep")
+    def left():#it deletes the the text in the line
+        a = textpad.get("1.0","1.22")
+        if a == placeholderText1:
+            print("ops")
+        else:
+            textpad.delete("0.0",END)
+
 
 class Alignment_widget:
 
@@ -164,6 +182,7 @@ class Alignment_widget:
     AL_x = 830
     L_allignment = Button(text="",image=L_img,compound="center",takefocus=False,style="A.TButton") #worked now. need it to fit in btn
     L_allignment.place(x=AL_x,y=alignment_y,width=bt_aspr,height=bt_aspr) 
+    L_allignment.config(command=Alignment_F.left)
 
     #center align btn
     c_img = Image.open("Icons\Center_icon.png")
@@ -194,14 +213,19 @@ class fontSizeTools:
     Fz_Field = Entry()
     Fz_Field.insert(0,"12")
     Fz_Field.place(x=field_x,y=bt_y,width=25,height=20)
-
+    #ICONS
     pl_img = Image.open("Icons\plusIC.png")
     r_pl_img = pl_img.resize((iconSize,iconSize), Image.Resampling.LANCZOS)
     PLs_img = ImageTk.PhotoImage(r_pl_img)
 
+    mn_img = Image.open("Icons\minusIC.png")
+    mn_pl_img = mn_img.resize((iconSize,iconSize), Image.Resampling.LANCZOS)
+    MNs_img = ImageTk.PhotoImage(mn_pl_img)
+
+
     addFontSize = Button(compound=CENTER,image=PLs_img,takefocus=False,style="A.TButton")
     addFontSize.place(x=(field_x +Fz_btnW+6),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
-    decreaseFontSize = Button(text="-")
+    decreaseFontSize = Button(compound=CENTER,image=MNs_img,takefocus=False,style="A.TButton")
     decreaseFontSize.place(x=(field_x-Fz_btnW),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
 
 class fontStyleSelection:
@@ -247,7 +271,8 @@ textpad = Text(bd=0)
 textpad.config(font=("calibri",11,"italic"),fg="#808080")
 textpad.place(x=350,y=(paper_y+130),width=800,height=1500)
 textpad.insert(END,placeholderText1)
-textpad.tag_add("plc","1.0","1.10") #marker
+textpad.tag_configure("lineTEST",justify="left")
+textpad.tag_add("lineTEST","1.0",END)
 textpad.bind('<FocusIn>',emptyDocCont.deletePlaceholderText)
 #textpad.bind('<FocusOut>',emptyDocCont.insertPlaceholderText)
 textpad.bind('<Leave>',emptyDocCont.insertPlaceholderText)
