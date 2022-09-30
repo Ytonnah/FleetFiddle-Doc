@@ -15,7 +15,7 @@ root = Tk()
 width,height = root.winfo_screenwidth(),(root.winfo_screenheight()+1000)
 canvasSize = root.geometry('%dx%d+0+0'%(width,height))
 root.title('FleetFiddle')
-root.config(background=Beige1)#hex colors must have the hashtag in specifying
+root.config(background="cyan")#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
 root.state('zoomed')#this work
@@ -39,6 +39,9 @@ class TopWidgets:
 
 
 #other window aspect
+paperBg = Canvas(root,width=10000,height=5000,background=Beige1,highlightthickness=0,bd=0,relief="ridge")
+paperBg.place(x=0,y=130)
+
 canvas = Canvas(root,width=10000,height=80,background=Green1,highlightthickness=0,bd=0,relief="ridge")
 canvas.place(x=0,y=0)
 canvas2 = Canvas(root,width=10000,height=50,background="#3D8361",highlightthickness=0,bd=0,relief="ridge")
@@ -66,6 +69,13 @@ class docnameReg:
                 Docname.delete(0,END)
                 Docname.config(fg="grey",font=("calibri",22,"bold"))
                 Docname.insert(0,docnameReg.placeholderText2)
+            elif len(Docname.get()) > 1 and docnameReg.placeholderText2 not in a and a[0:5] == " ":
+                # has to give exeption on names with spaces
+                Docname.delete(0,END)
+                Docname.config(fg="grey",font=("calibri",22,"bold"))
+                Docname.insert(0,docnameReg.placeholderText2)
+            else:
+                pass
                 
             Docname.config(fg=Beige1)
 
@@ -126,11 +136,21 @@ edit.place_forget()
 
 
 #SCROLLBAR Feature for page navigation
-pageScrollbar = Scrollbar(jump=0)
+pageScrollbar = Scrollbar(orient=VERTICAL,command=paperBg.yview)
 pageScrollbar.place(x=1345,y=130,height=10000)
 
+paperBg.config(yscrollcommand=pageScrollbar.set)
+paperBg.bind('<Configure>',lambda e: paperBg.configure(scrollregion=paperBg.bbox("all")))
+
+pbg2 = Frame(paperBg)
+paperBg.create_window((0,0),window=pbg2,anchor="nw")
+'''
+Scroll Feature needs rework
+---------------------------
+there is hard to implement the feature
 
 
+'''
 #Add the content tools bar(below the nav bars)
 
 #1. the font alignment buttons (left,centered, right)
