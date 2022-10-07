@@ -52,6 +52,7 @@ paperplace.place(x=250,y=paper_y)
 #registered name of Document goes here:
 class docnameReg:
     placeholderText2 = " Untitled"
+    
     def removeFocus(event): 
         a =Docname.get()
         if event:
@@ -65,7 +66,7 @@ class docnameReg:
                 Docname.insert(0,docnameReg.placeholderText2)
 
             elif len(Docname.get()) > 0 and docnameReg.placeholderText2 not in a and " " in a[0:4]:
-                if " " in a[0:4]:
+                if " " in a[0:4]: #can be optimize to shorter I think
                     empty = False #default value for the empty string
                     for chr in a[0:6]:
                         match chr:
@@ -77,17 +78,20 @@ class docnameReg:
                                 break
 
                     if empty:
-                        Docname.delete(0,END)
-                        Docname.config(fg="grey",font=("calibri",22,"bold"))
-                        Docname.insert(0,docnameReg.placeholderText2)
+                        docnameReg.insertplaceholdertext()
+                        Docname.config(fg=Beige1)
 
                 else:
-                    Docname.delete(0,END)
-                    Docname.config(fg="grey",font=("calibri",22,"bold"))
-                    Docname.insert(0,docnameReg.placeholderText2)
-            
+                    docnameReg.insertplaceholdertext()
+
+    def insertplaceholdertext():
+        Docname.delete(0,END)
+        Docname.config(fg="grey",font=("calibri",22,"bold"))
+        Docname.insert(0,docnameReg.placeholderText2)
+
+
                 
-            Docname.config(fg=Beige1)
+        
 
             
     def active(event):
@@ -147,8 +151,8 @@ navFile4.place(width=75,height=23,x=((75*3)+35+ 6),y=nav_y)
 
 
 #SCROLLBAR Feature for page navigation
-pageScrollbar = Scrollbar(paperBg,orient=VERTICAL,command=paperBg.yview, jump = 0)
-pageScrollbar.place(x=1345,y=0,height=500)
+pageScrollbar = Scrollbar(paperBg,orient=VERTICAL,command=paperBg.yview_scroll)
+pageScrollbar.place(x=1345,y=0,height=1000)
 
 paperBg.config(yscrollcommand=pageScrollbar.set)
 paperBg.bind('<Configure>',lambda e: paperBg.configure(scrollregion=paperplace.bbox("all")))
@@ -179,9 +183,9 @@ class Alignment_F:
     def center():
        
         a = textpad.get("current linestart",END)
-
-        if len(a) > 0 and a == placeholderText1:
+        if len(a) > 0 and placeholderText1 in a:
             print("placeholder text found!")
+            
         else:
             textpad.tag_configure("center",justify="center")
             textpad.insert('insert linestart',"\t"*5,"center")#this works somehow:
