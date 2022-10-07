@@ -15,27 +15,21 @@ root = Tk()
 width,height = root.winfo_screenwidth(),(root.winfo_screenheight()+1000)
 canvasSize = root.geometry('%dx%d+0+0'%(width,height))
 root.title('FleetFiddle')
-root.config(background="cyan")#hex colors must have the hashtag in specifying
+root.config(background="cyan")
+#hex colors must have the hashtag in specifying
 #root.resizable(False,False)
 #root.attributes('-fullscreen',True)
-root.state('zoomed')#this work
+root.state('zoomed')
+#this work
 #MAIN FRAME
 frm = ttk.Frame(root,padding=0)
 frm.place()
 
+
 #implementation of color scheme goes here
 
-'''
-test out core features. then move it on a separate library later
-'''
+'''  test out core features. then move it on a separate library later   '''
 
-class TopWidgets:
-    def show():
-        edit.place(x= 90,y=80,width=75,height=300)#reseting the plcement
-        navFile2.config(command=TopWidgets.hide)
-    def hide():
-        edit.place_forget()
-        navFile2.config(command=TopWidgets.show)
 
 
 #other window aspect
@@ -136,7 +130,7 @@ navFile1.menu.add_command(label="Document Details")
 
 navFile2 = Button(text="Edit",style='Nav.TButton',takefocus=False)
 #replace this widget with menu button and remove Topwidgets
-navFile2.config (command=TopWidgets.show)
+navFile2.config ()
 navFile2.place(width=75,height=23,x=(75+35+2),y=nav_y)
 #navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
 #word editing utilities goes here.
@@ -149,14 +143,12 @@ navFile4 = Button(text="View",style='Nav.TButton',takefocus=False)
 navFile4.config()
 navFile4.place(width=75,height=23,x=((75*3)+35+ 6),y=nav_y)
 #pop widgets goes here 
-edit = Frame(root)
-edit.config()#make it so the the widget frame display is hidden
-edit.place_forget()
+
 
 
 #SCROLLBAR Feature for page navigation
-pageScrollbar = Scrollbar(root,orient=VERTICAL,command=paperBg.yview)
-pageScrollbar.place(x=1345,y=130,height=10000)
+pageScrollbar = Scrollbar(paperBg,orient=VERTICAL,command=paperBg.yview, jump = 0)
+pageScrollbar.place(x=1345,y=0,height=500)
 
 paperBg.config(yscrollcommand=pageScrollbar.set)
 paperBg.bind('<Configure>',lambda e: paperBg.configure(scrollregion=paperplace.bbox("all")))
@@ -185,25 +177,23 @@ class Alignment_F:
     '''
     #Alignment functions goes here (the ff are beta features improve na lang to)
     def center():
-        #add event binds later
-        D_Line()
-        
-        a = textpad.get("1.0","1.22")
+       
+        a = textpad.get("current linestart",END)
+
         if len(a) > 0 and a == placeholderText1:
             print("placeholder text found!")
         else:
-            #textpad.insert("0.0","\t\t\t\t\t.")
-            #textpad.tag_configure("currentline",justify="center")
-           
-            #textpad.tag_configure(str(INSERT),justify="center")
-            textpad.tag_configure("2",justify="center")
-            print(textpad.index(INSERT))
-            #need to call the marker: has to auto update(like get current Line or smth)
-            print("beep")
+            textpad.tag_configure("center",justify="center")
+            textpad.insert('insert linestart',"\t"*5,"center")#this works somehow:
+            #all i need to add now is undoing formatting when pressing backspace 
+            
+            print("centered!")
     def left():#it deletes the the text in the line
         a = textpad.get("1.0","1.22")
-        
-        textpad.tag_configure(INSERT,justify="left")
+        textpad.tag_configure("left",justify="left")
+        textpad.insert('insert linestart',""*5,"left")
+        print("align-left")
+
 
 
 class Alignment_widget:
@@ -305,36 +295,35 @@ class emptyDocCont:
             textpad.config(font=("calibri",12,"italic"),fg="#808080")
             root.focus()
 
-
-#global variable line_count
-
+#this class is disposeable
 class D_Line:
     line_count = 0
     #startline = str(line_count)+".2"
-    
     
     #maybe use__init__ later on optimization
     def add_line(self):
         #startL = str(D_Line.line_count)+".2"
         startL = textpad.index(INSERT)
         #need to make sure that It only modify until the endline pointer
-        #textpad.tag_bind(startL,)
         #need: Endline Pointer,/t replacement to remove alignmentformat after clicking backspace
         D_Line.line_count+=1
         fl_Index = float(startL)
 
+        #this mechanics technically ignores the  decimals and focus on da line
         if fl_Index < 10:
             print("added new marker at line: " + startL[0])
+            #textpad.tag_add(startL[0],INSERT,CURRENT)
             textpad.tag_add(startL[0],INSERT,CURRENT)
         elif fl_Index >= 10 and fl_Index < 100:
-            print("added new marker at line: " + startL[0]+startL[1])
-
+            digitLine2 = startL[0]+startL[1]
+            print("added new marker at line: " + digitLine2)
+            textpad.tag_add(digitLine2,INSERT,CURRENT)
 
         return startL
         
 
 #text field goes here
-placeholderText1 = "Type something here"
+placeholderText1 = "Type something here" # << BUG FOUND
 textpad = Text()
 textpad.config(bd=0,font=("calibri",11,"italic"),fg="#808080")
 textpad.place(x=350,y=(paper_y+230),width=800,height=1500)
@@ -342,6 +331,7 @@ textpad.insert(END,placeholderText1)
 textpad.bind('<FocusIn>',emptyDocCont.deletePlaceholderText)
 textpad.bind('<Leave>',emptyDocCont.insertPlaceholderText) #or use '<FocusOut>' here
 textpad.bind('<Return>',D_Line.add_line)
+textpad.see(END)
 
 
 
