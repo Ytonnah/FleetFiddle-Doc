@@ -4,6 +4,7 @@ from tkinter.ttk import Button,Combobox,Menubutton
 from tkinter import Canvas 
 from PIL import Image, ImageTk
 
+#IMPORTANT NOTE: ADD REPLACE THE PLACE WITH PACK INSTEAD PARA SA SCROLLBAR
 
 #INCLUDE BASIC COLORS FOR REUSABILITY
 Green1 = "#1C6758"
@@ -15,37 +16,38 @@ root = Tk()
 width,height = root.winfo_screenwidth(),(root.winfo_screenheight()+1000)
 canvasSize = root.geometry('%dx%d+0+0'%(width,height))
 root.title('FleetFiddle')
-root.config(background="cyan")
+#root.config(background="cyan")
 #hex colors must have the hashtag in specifying
-#root.resizable(False,False)
-#root.attributes('-fullscreen',True)
 root.state('zoomed')
-#this work
 #MAIN FRAME
 frm = ttk.Frame(root,padding=0)
-frm.place()
+frm.pack()
 
+paper_height = 50000
 
-#implementation of color scheme goes here
 
 '''  test out core features. then move it on a separate library later   '''
 
-
+paperframe = ttk.Frame(frm,width=1000,height=paper_height,padding=0)
+paperframe.pack(pady=(100,0))
 
 #other window aspect
-paperBg = Canvas(root,width=10000,height=5000,background=Beige1,highlightthickness=0,bd=0,relief="ridge")
-paperBg.place(x=0,y=130)
+paperBg = Canvas(paperframe,width=10000,height=1000,background=Beige1,highlightthickness=0,bd=0,relief="ridge")
+paperBg.config(scrollregion=(0,0,10000,10000))
+paperBg.pack(fill=NONE,side=TOP)
+
+'''you can place the widgets on canvas using create_window, figure it out'''
+paper1 = paperBg.create_rectangle(1160,2300,270,100,fill="#FFFFFF",outline="#FFFFFF")
+
+
 
 canvas = Canvas(root,width=10000,height=80,background=Green1,highlightthickness=0,bd=0,relief="ridge")
 canvas.place(x=0,y=0)
-canvas2 = Canvas(root,width=10000,height=50,background="#3D8361",highlightthickness=0,bd=0,relief="ridge")
+canvas2 = Canvas(root,width=10000,height=50,background=Green2,highlightthickness=0,bd=0,relief="ridge")
 canvas2.place(x=0,y=80)
 canvas2.create_rectangle(10000,60,-10,0,outline=Beige1,width=5)
 
-paper_y = 100
-paperplace = Canvas(paperBg,width=1000,height=2000,background="#FFFFFF",highlightthickness=0,bd=0,relief="ridge")
-paperplace.place(x=250,y=paper_y)
-
+#replace paperplace with create rect instead for optimize 
 
 
 
@@ -60,9 +62,8 @@ class docnameReg:
             Docname.config(bd=0)
             #It also needs to autoselect upon clicking
             if len(Docname.get())  == 0 and docnameReg.placeholderText2 not in a:#needs to detect empty strings
-                #Docname.config(fg="red")
                 Docname.delete(0,END)
-                Docname.config(fg="grey",font=("calibri",22,"bold"))
+                Docname.config(fg="grey",font=("calibri",22,"bold","italic"))
                 Docname.insert(0,docnameReg.placeholderText2)
 
             elif len(Docname.get()) > 0 and docnameReg.placeholderText2 not in a and " " in a[0:4]:
@@ -89,15 +90,12 @@ class docnameReg:
         Docname.config(fg="grey",font=("calibri",22,"bold"))
         Docname.insert(0,docnameReg.placeholderText2)
 
-
-                
-        
-
-            
+#-----------------------------------------------
     def active(event):
         a =Docname.get()#fix this one later
         if event:
             Docname.config(bd=1)
+            Docname.config(fg=Beige1,font=("calibri",22,"bold","roman"))#roman for unslanted
             Docname.selection_range(0,END)
             if a[0]!=" ":
                 Docname.insert(0," ")
@@ -126,7 +124,7 @@ navFile1.place(width=75,height=23,x=35,y=nav_y)
 navFile1.menu = Menu(navFile1)
 navFile1["menu"] = navFile1.menu
 #nonfunctional options so far
-navFile1.menu.add_command(label="Open File")
+navFile1.menu.add_command(label="Open File",command=print("openfile"))
 navFile1.menu.add_command(label="Save As")
 navFile1.menu.add_command(label="Print")
 navFile1.menu.add_command(label="Preferences")
@@ -149,22 +147,14 @@ navFile4.place(width=75,height=23,x=((75*3)+35+ 6),y=nav_y)
 #pop widgets goes here 
 
 
-
 #SCROLLBAR Feature for page navigation
-pageScrollbar = Scrollbar(paperBg,orient=VERTICAL,command=paperBg.yview_scroll)
-pageScrollbar.place(x=1345,y=0,height=1000)
+'''Scrollbar'''
+pageScrollbar = Scrollbar(paperframe,orient=VERTICAL,command=paperBg.yview)
+pageScrollbar.place(x=1345,y=28,height=580)
 
 paperBg.config(yscrollcommand=pageScrollbar.set)
-paperBg.bind('<Configure>',lambda e: paperBg.configure(scrollregion=paperplace.bbox("all")))
 
-pbg2 = Frame(paperBg)
-paperBg.create_window((0,0),window=pbg2,anchor="nw")
-'''
-Scroll Feature needs rework
----------------------------
-it is tricky to implement the feature
 
-'''
 #Add the content tools bar(below the nav bars)
 
 #1. the font alignment buttons (left,centered, right)
@@ -193,9 +183,10 @@ class Alignment_F:
             
             print("centered!")
     def left():#it deletes the the text in the line
-        a = textpad.get("1.0","1.22")
+        a = textpad.get("current linestart",END)
         textpad.tag_configure("left",justify="left")
-        textpad.insert('insert linestart',""*5,"left")
+        #textpad.insert('insert linestart',""*5,"left")
+        textpad.delete('insert linestart','left')
         print("align-left")
 
 
@@ -246,10 +237,11 @@ class fontSizeTools:
     field_x = 600
     iconSize = 20
 
-    Label2 = Label(text="Font Size:").place(x=580,y=(bt_y-22),width=55,height=20)
+    Label2 = Label(text="Font Size:").place(x=580,y=(bt_y-22),width=58,height=20)
     Fz_Field = Entry()
+    Fz_Field.config(bg=Beige1,font=("Arial",10,"bold"),fg=Green1,justify="left",bd=0)
     Fz_Field.insert(0,"12")
-    Fz_Field.place(x=field_x,y=bt_y,width=25,height=20)
+    Fz_Field.place(x=field_x,y=bt_y,width=28,height=20)
     #ICONS
     pl_img = Image.open("Icons\plusIC.png")
     r_pl_img = pl_img.resize((iconSize,iconSize), Image.Resampling.LANCZOS)
@@ -260,7 +252,8 @@ class fontSizeTools:
     MNs_img = ImageTk.PhotoImage(mn_pl_img)
 
 
-    addFontSize = Button(compound=CENTER,image=PLs_img,takefocus=False,style="A.TButton")
+    addFontSize = Button(image=PLs_img,takefocus=False,style="A.TButton")
+    
     addFontSize.place(x=(field_x +Fz_btnW+6),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
     decreaseFontSize = Button(compound=CENTER,image=MNs_img,takefocus=False,style="A.TButton")
     decreaseFontSize.place(x=(field_x-Fz_btnW),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
@@ -324,22 +317,25 @@ class D_Line:
             textpad.tag_add(digitLine2,INSERT,CURRENT)
 
         return startL
-        
 
-#text field goes here
+p_label = Label(text="paper_page_1",bg="grey")
+p_label.place(x=270,y=180)
+#add separate class here later
+
+#text field goes here(textpad needs to scroll along with the canvas)
 placeholderText1 = "Type something here" # << BUG FOUND
-textpad = Text()
+textpad = Text(paperframe)
 textpad.config(bd=0,font=("calibri",11,"italic"),fg="#808080")
-textpad.place(x=350,y=(paper_y+230),width=800,height=1500)
+textpad.place(x=0,y=0,width=750,height=1500)
 textpad.insert(END,placeholderText1)
+#x=350,y=(100+130)
 textpad.bind('<FocusIn>',emptyDocCont.deletePlaceholderText)
 textpad.bind('<Leave>',emptyDocCont.insertPlaceholderText) #or use '<FocusOut>' here
 textpad.bind('<Return>',D_Line.add_line)
 textpad.see(END)
 
+#instead of clipping one widget, it has to clip a frame I guess?
+tw_window = paperBg.create_window((350,230),anchor='nw',width=750,height=1500,window=textpad)
 
-
-# work with tag bind later
-#textpad.tag_configure("lineTEST",justify="left")
 
 root.mainloop()
