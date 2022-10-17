@@ -28,7 +28,7 @@ paper_height = 50000
 
 '''  test out core features. then move it on a separate library later   '''
 
-paperframe = ttk.Frame(frm,width=1000,height=paper_height,padding=0)
+paperframe = ttk.Frame(frm,width=1000,height=1000,padding=0)
 paperframe.pack(pady=(100,0))
 
 #other window aspect
@@ -36,30 +36,36 @@ paperBg = Canvas(paperframe,width=10000,height=1000,background=Beige1,highlightt
 paperBg.config(scrollregion=(0,0,10000,10000))
 paperBg.pack(fill=NONE,side=TOP)
 
+#make class for paper resolutions later
+a1= [2480,3508]
+tst = [1160,2300]
+
+paper_res = tst #replace array to dynamically change page resolution
+
 '''you can place the widgets on canvas using create_window, figure it out'''
-paper1 = paperBg.create_rectangle(1160,2300,270,100,fill="#FFFFFF",outline="#FFFFFF")
+paper1 = paperBg.create_rectangle(paper_res[0],paper_res[1],270,100,fill="#FFFFFF",outline="#FFFFFF")
 
 
 
-canvas = Canvas(root,width=10000,height=80,background=Green1,highlightthickness=0,bd=0,relief="ridge")
+canvas = Canvas(root,width=10000,height=130,background=Green1,highlightthickness=0,bd=0,relief="ridge",state=NORMAL)
 canvas.place(x=0,y=0)
-canvas2 = Canvas(root,width=10000,height=50,background=Green2,highlightthickness=0,bd=0,relief="ridge")
+#canvas.create_rectangle(10000,80,0,80,outline=Beige1,width=2,activefill=Green2)
+
+canvas2 = Canvas(canvas,width=10000,height=50,background=Green2,highlightthickness=0,bd=0,relief="ridge")
 canvas2.place(x=0,y=80)
 canvas2.create_rectangle(10000,60,-10,0,outline=Beige1,width=5)
 
-#replace paperplace with create rect instead for optimize 
+canvas3 = Canvas(frm,width=70,height=1000,background=Green2,highlightthickness=0,bd=0,relief="ridge")
+canvas3.place(x=0,y=80)
 
 
-
-#registered name of Document goes here:
 class docnameReg:
     placeholderText2 = " Untitled"
-    
     def removeFocus(event): 
         a =Docname.get()
         if event:
             root.focus()
-            Docname.config(bd=0)
+            Docname.config(bd=0,highlightthickness=0)
             #It also needs to autoselect upon clicking
             if len(Docname.get())  == 0 and docnameReg.placeholderText2 not in a:#needs to detect empty strings
                 Docname.delete(0,END)
@@ -118,13 +124,23 @@ style1.map('Nav.TButton',background =[('active',Beige1)])
 
 nav_y = 58 #the y-axis of the navigation widget is just the same
 
+class popUps:
+    def popN1():
+        pop1 = Toplevel(root)
+        pop1.geometry('800x450')
+        pop1.title('OpenFile')
+        x = root.winfo_x()
+        y = root.winfo_y()
+        pop1.geometry("+%d+%d" %(x+300,y+180))
+
+
 navFile1 = Menubutton(text="File",style='Nav.TButton',takefocus=False)
 navFile1.config()
 navFile1.place(width=75,height=23,x=35,y=nav_y)
-navFile1.menu = Menu(navFile1)
+navFile1.menu = Menu(navFile1,tearoff=0) #tearoffs might be essential when we make more options
 navFile1["menu"] = navFile1.menu
 #nonfunctional options so far
-navFile1.menu.add_command(label="Open File",command=print("openfile"))
+navFile1.menu.add_command(label="Open File",command=popUps.popN1)
 navFile1.menu.add_command(label="Save As")
 navFile1.menu.add_command(label="Print")
 navFile1.menu.add_command(label="Preferences")
@@ -134,8 +150,7 @@ navFile2 = Button(text="Edit",style='Nav.TButton',takefocus=False)
 #replace this widget with menu button and remove Topwidgets
 navFile2.config ()
 navFile2.place(width=75,height=23,x=(75+35+2),y=nav_y)
-#navFile2.bind('<Button-1>',TopWidgets.openFileBtn)
-#word editing utilities goes here.
+
 
 navFile3 = Button(text="Insert",style='Nav.TButton',takefocus=False)
 navFile3.config()
@@ -155,7 +170,7 @@ pageScrollbar.place(x=1345,y=28,height=580)
 paperBg.config(yscrollcommand=pageScrollbar.set)
 
 
-#Add the content tools bar(below the nav bars)
+                    #CONTENT UTILITIES
 
 #1. the font alignment buttons (left,centered, right)
 class Alignment_F:
@@ -167,6 +182,8 @@ class Alignment_F:
         -right Align adds tab spaces or mirror the index of start type oringin to the right and slide to left upon editing
 
         REstraints: it must not modify placeholder text in textpad
+
+        In text Indexing use 'Insert' instead of 'Current'
 
     '''
     #Alignment functions goes here (the ff are beta features improve na lang to)
@@ -183,11 +200,25 @@ class Alignment_F:
             
             print("centered!")
     def left():#it deletes the the text in the line
-        a = textpad.get("current linestart",END)
+        a = textpad.get("insert linestart",'insert lineend')
+        #GET THE INDEX OF NON SPACE
+        
+        lineLength = str(len(a))
+        print(f'line length{lineLength}')
+
+        replChr = 0
+        for characters in a: #has to count the spaces in the insert
+            if characters.isspace() == FALSE:
+                replChr +=1
+            if characters.isspace() and characters != "\t": #gives exception to tab spaces
+                replChr +=1
+        textpad.delete('insert linestart',f'insert - {replChr} chars')
+        print(f"replChr: {replChr}") #has an error if sentence has spaces of not indentation
+
         textpad.tag_configure("left",justify="left")
-        #textpad.insert('insert linestart',""*5,"left")
-        textpad.delete('insert linestart','left')
+        
         print("align-left")
+        
 
 
 
@@ -196,19 +227,22 @@ class Alignment_widget:
     alignment_y = 92 #base y alignment
     alignment_label = Label(text="Alignment:").place(x=845,y=(alignment_y - 20))
     bt_aspr = 30
-    img_aspr = 30 #image aspect ratio
+    img_aspr = 28 #image aspect ratio
 
+    #Button style
     alBtn = ttk.Style()
     alBtn.theme_use("default")
-    alBtn.configure("A.TButton",relief="flat",background="#3D8361",padding=0)
-    alBtn.map("A.TButton",background = [('active', "#3D8361")])
+    alBtn.configure("A.TButton",relief=FLAT,background=Beige1,padding=0)
+    alBtn.map("A.TButton",background = [('active', Beige1)])
+
+
     #left align btn
     l_img = Image.open("Icons\Left_icon.png")
     r_l_img = l_img.resize((img_aspr,img_aspr), Image.Resampling.LANCZOS)
     L_img = ImageTk.PhotoImage(r_l_img)
 
     AL_x = 830
-    L_allignment = Button(text="",image=L_img,compound="center",takefocus=False,style="A.TButton") #worked now. need it to fit in btn
+    L_allignment = Button(text="",image=L_img,compound=TOP,takefocus=False,style="A.TButton") #worked now. need it to fit in btn
     L_allignment.place(x=AL_x,y=alignment_y,width=bt_aspr,height=bt_aspr) 
     L_allignment.config(command=Alignment_F.left)
 
@@ -218,7 +252,7 @@ class Alignment_widget:
     C_img = ImageTk.PhotoImage(r_c_img)
 
     AL_x2 = AL_x+bt_aspr+2
-    C_allignment = Button(root,text='',image=C_img,compound="center",takefocus=False,style="A.TButton") #maybe replace it with icons later on
+    C_allignment = Button(root,text='',image=C_img,compound=TOP,takefocus=False,style="A.TButton") #maybe replace it with icons later on
     C_allignment.config(command=Alignment_F.center)
     C_allignment.place(x=AL_x2,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
@@ -227,7 +261,7 @@ class Alignment_widget:
     r_r_img = r_img.resize((img_aspr,img_aspr), Image.Resampling.LANCZOS)
     R_img = ImageTk.PhotoImage(r_r_img)
     AL_x3 = AL_x2 + bt_aspr +2
-    R_allignment = Button(text='',image=R_img,compound="right",takefocus=False,style="A.TButton") #maybe replace it with icons later on
+    R_allignment = Button(text='',image=R_img,compound=TOP,takefocus=False,style="A.TButton") #maybe replace it with icons later on
     R_allignment.place(x=AL_x3,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
 class fontSizeTools:
@@ -239,9 +273,9 @@ class fontSizeTools:
 
     Label2 = Label(text="Font Size:").place(x=580,y=(bt_y-22),width=58,height=20)
     Fz_Field = Entry()
-    Fz_Field.config(bg=Beige1,font=("Arial",10,"bold"),fg=Green1,justify="left",bd=0)
+    Fz_Field.config(bg=Beige1,font=("Arial",10,"bold"),fg=Green1,justify="center",bd=0)
     Fz_Field.insert(0,"12")
-    Fz_Field.place(x=field_x,y=bt_y,width=28,height=20)
+    Fz_Field.place(x=field_x,y=bt_y,width=30,height=20)
     #ICONS
     pl_img = Image.open("Icons\plusIC.png")
     r_pl_img = pl_img.resize((iconSize,iconSize), Image.Resampling.LANCZOS)
@@ -254,9 +288,10 @@ class fontSizeTools:
 
     addFontSize = Button(image=PLs_img,takefocus=False,style="A.TButton")
     
-    addFontSize.place(x=(field_x +Fz_btnW+6),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
+    addFontSize.place(x=(field_x +Fz_btnW+9),y=bt_y,width=Fz_btnW,height=Fz_BtnH,bordermode='inside')
+
     decreaseFontSize = Button(compound=CENTER,image=MNs_img,takefocus=False,style="A.TButton")
-    decreaseFontSize.place(x=(field_x-Fz_btnW),y=bt_y,width=Fz_btnW,height=Fz_BtnH)
+    decreaseFontSize.place(x=(field_x-Fz_btnW),y=bt_y,width=Fz_btnW,height=Fz_BtnH,bordermode='inside')
 
 class fontStyleSelection:
     #add styling here
@@ -287,39 +322,15 @@ class emptyDocCont:
         a = textpad.get("0.1","1.40")
         plcd = placeholderText1 in a
         if event and plcd==False and len(a) == 0:
-            print(event)
+            #print(event)
             textpad.insert(END,placeholderText1)
             textpad.config(font=("calibri",12,"italic"),fg="#808080")
             root.focus()
 
 #this class is disposeable
-class D_Line:
-    line_count = 0
-    #startline = str(line_count)+".2"
-    
-    #maybe use__init__ later on optimization
-    def add_line(self):
-        #startL = str(D_Line.line_count)+".2"
-        startL = textpad.index(INSERT)
-        #need to make sure that It only modify until the endline pointer
-        #need: Endline Pointer,/t replacement to remove alignmentformat after clicking backspace
-        D_Line.line_count+=1
-        fl_Index = float(startL)
-
-        #this mechanics technically ignores the  decimals and focus on da line
-        if fl_Index < 10:
-            print("added new marker at line: " + startL[0])
-            #textpad.tag_add(startL[0],INSERT,CURRENT)
-            textpad.tag_add(startL[0],INSERT,CURRENT)
-        elif fl_Index >= 10 and fl_Index < 100:
-            digitLine2 = startL[0]+startL[1]
-            print("added new marker at line: " + digitLine2)
-            textpad.tag_add(digitLine2,INSERT,CURRENT)
-
-        return startL
-
-p_label = Label(text="paper_page_1",bg="grey")
-p_label.place(x=270,y=180)
+   
+p_label = Label(paperframe,text="paper_page_1",bg="grey")
+p_label.place(x=270,y=160)
 #add separate class here later
 
 #text field goes here(textpad needs to scroll along with the canvas)
@@ -331,11 +342,12 @@ textpad.insert(END,placeholderText1)
 #x=350,y=(100+130)
 textpad.bind('<FocusIn>',emptyDocCont.deletePlaceholderText)
 textpad.bind('<Leave>',emptyDocCont.insertPlaceholderText) #or use '<FocusOut>' here
-textpad.bind('<Return>',D_Line.add_line)
+
 textpad.see(END)
 
 #instead of clipping one widget, it has to clip a frame I guess?
-tw_window = paperBg.create_window((350,230),anchor='nw',width=750,height=1500,window=textpad)
+tpl_window = paperBg.create_window((270,80),anchor='nw',window=p_label)
+tp_window = paperBg.create_window((350,230),anchor='nw',width=750,height=1500,window=textpad)
 
 
 root.mainloop()
