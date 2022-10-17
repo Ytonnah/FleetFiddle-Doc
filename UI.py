@@ -16,9 +16,11 @@ root = Tk()
 width,height = root.winfo_screenwidth(),(root.winfo_screenheight()+1000)
 canvasSize = root.geometry('%dx%d+0+0'%(width,height))
 root.title('FleetFiddle')
+
 #root.config(background="cyan")
 #hex colors must have the hashtag in specifying
 root.state('zoomed')
+
 #MAIN FRAME
 frm = ttk.Frame(root,padding=0)
 frm.pack()
@@ -32,6 +34,7 @@ paperframe = ttk.Frame(frm,width=1000,height=1000,padding=0)
 paperframe.pack(pady=(100,0))
 
 #other window aspect
+
 paperBg = Canvas(paperframe,width=10000,height=1000,background=Beige1,highlightthickness=0,bd=0,relief="ridge")
 paperBg.config(scrollregion=(0,0,10000,10000))
 paperBg.pack(fill=NONE,side=TOP)
@@ -48,6 +51,7 @@ paper1 = paperBg.create_rectangle(paper_res[0],paper_res[1],270,100,fill="#FFFFF
 
 
 canvas = Canvas(root,width=10000,height=130,background=Green1,highlightthickness=0,bd=0,relief="ridge",state=NORMAL)
+
 canvas.place(x=0,y=0)
 #canvas.create_rectangle(10000,80,0,80,outline=Beige1,width=2,activefill=Green2)
 
@@ -71,6 +75,17 @@ class docnameReg:
                 Docname.delete(0,END)
                 Docname.config(fg="grey",font=("calibri",22,"bold","italic"))
                 Docname.insert(0,docnameReg.placeholderText2)
+
+            elif len(Docname.get()) > 1 and docnameReg.placeholderText2 not in a and a[0:5] == " ":
+                # has to give exeption on names with spaces
+                Docname.delete(0,END)
+                Docname.config(fg="grey",font=("calibri",22,"bold"))
+                Docname.insert(0,docnameReg.placeholderText2)
+            else:
+                pass
+                
+            Docname.config(fg=Beige1)
+
 
             elif len(Docname.get()) > 0 and docnameReg.placeholderText2 not in a and " " in a[0:4]:
                 if " " in a[0:4]: #can be optimize to shorter I think
@@ -163,6 +178,7 @@ navFile4.place(width=75,height=23,x=((75*3)+35+ 6),y=nav_y)
 
 
 #SCROLLBAR Feature for page navigation
+
 '''Scrollbar'''
 pageScrollbar = Scrollbar(paperframe,orient=VERTICAL,command=paperBg.yview)
 pageScrollbar.place(x=1345,y=28,height=580)
@@ -171,6 +187,7 @@ paperBg.config(yscrollcommand=pageScrollbar.set)
 
 
                     #CONTENT UTILITIES
+
 
 #1. the font alignment buttons (left,centered, right)
 class Alignment_F:
