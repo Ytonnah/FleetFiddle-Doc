@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 
 #local imports
 import util.Util1 as utility
-from util.Util1 import paper
+from util.Util1 import paper, Alignment
 
 #IMPORTANT NOTE: ADD REPLACE THE PLACE WITH PACK INSTEAD PARA SA SCROLLBAR
 
@@ -212,80 +212,8 @@ class Alignment_F:
     '''
 
 #migrate this code in the future
-    def center(): #Current Status: Stable
-        a = textpad.get("current linestart",END)
-        b = textpad.tag_ranges(SEL)
-        cursor_index = textpad.index(INSERT) #index zero gets the first character of the index: line location
-        if b:
-            current_selection_line_index1  = textpad.index(SEL_LAST)
-            current_selection_line_index2 = textpad.index(SEL_FIRST)
 
-        if len(a) > 0 and placeholderText1 in a:
-            print("placeholder text found!")
-            
-        elif placeholderText1 not in a and len(a)>0 and len(b)==0: #JUSTIFIES ONE LINE WHERE INSERT INDEX IS LOCATED
-            textpad.tag_configure("center",justify="center")
-            textpad.insert('insert linestart',"\t"*5,"center")#this works somehow:
-            #all i need to add now is undoing formatting when pressing backspace 
-            print(f'length of selection: {len(b)}')
-            print("centered! - method 1")
-
-        #A. If the cursor is at the last part near the last line of selection Index(from top to bottom selection)
-        elif textpad.tag_ranges(SEL) and len(b) > 0 and cursor_index[0] == current_selection_line_index1[0]:#JUSTIFIES SELECTED MULTIPLE LINES
-            c = textpad.get('sel.first','sel.last')
-
-            textpad.tag_configure("center",justify="center")#get the linestart of the selection
-            textpad.insert('insert linestart','\t'*5,'center')
-            #[/]make and algorithm that detects the selected lines
-            #[/]gets the lines selected
-            #[/]create insert algorithms for each loop
-            #[ ]keeps the justification when entered is pressed
-
-            newLines = c.count('\n')
-            print(f"newline counted{newLines}")
-
-            line = 0 
-            #print(c)
-            while line <= newLines: #remove the selection
-                
-                print('newlines\n-----------')
-                textpad.insert(f'insert linestart - {line} lines','\t','center')
-                print('line ' +str(line))
-                #print(textpad.index(SEL_FIRST))
-                line +=1
-
-            print("centered! - method 2A")
-            textpad.tag_remove(SEL,'1.0',END)
-
-        #B. If Insert Cursor is near at the first selection(selected from bottom to top)
-        elif textpad.tag_ranges(SEL) and len(b) > 0 and cursor_index[0] == current_selection_line_index2[0]:
-            #BUG:it aligns the character below exceeding on the selection
-
-            c = textpad.get('sel.first','sel.last')
-
-            textpad.tag_configure("center",justify="center")#get the linestart of the selection
-            textpad.insert('insert linestart','\t'*5,'center')
-            line = 0 
-            
-            newLines = c.count('\n')
-            print(f"newline counted{newLines}")
-            while line <= newLines:
-            
-                print('newlines\n-----------')
-                print('line ' +str(line))
-                textpad.insert(f'insert linestart + {line} lines','\t','center')
-
-                line +=1
-
-                    #print(textpad.index(SEL_FIRST))
-            print("centered! - method 2B")
-            textpad.tag_remove(SEL,'1.0',END)#removes selections
-
-        else:
-            print(f'length of selection: {len(b)}')    
-           
-
-
+    #NOTE: center function migrated
     def left():#it deletes the the text in the line
         a = textpad.get("insert linestart",'insert lineend')
         b = textpad.tag_ranges(SEL)
@@ -422,7 +350,7 @@ class Alignment_widget:
     AL_x2 = AL_x+bt_aspr+2
 
     C_allignment = Button(root,text='',image=C_img,compound=TOP,takefocus=False,style="A.TButton") #maybe replace it with icons later on
-    C_allignment.config(command=Alignment_F.center)
+    C_allignment.config(command=lambda:Alignment.center(textpad))
     C_allignment.place(x=AL_x2,y=alignment_y,width=bt_aspr,height=bt_aspr)
 
     #right align btn
